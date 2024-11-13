@@ -18,12 +18,16 @@ export const createOrUpdateProfile = async (req, res) => {
   }
 };
 
-export const getProfile = async (req, res) => {
+export const getProfileById = async (req, res) => {
+  const { id } = req.params; 
+
   try {
-    const profile = await Profile.findOne({ user: req.user.userId }).populate('user', 'name email');
+    const profile = await Profile.findById(id).populate('user', 'name email');
+
     if (!profile) {
       return res.status(404).json({ message: 'Profile not found' });
     }
+
     res.status(200).json(profile);
   } catch (error) {
     res.status(500).json({ message: error.message });
