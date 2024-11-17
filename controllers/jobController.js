@@ -16,18 +16,24 @@ export const approveJobRequest = async (req, res) => {
 };
 
 export const createJobRequest = async (req, res) => {
-  const { title, description, requirements } = req.body;
+  const { title, description, requirements, location, salaryRange, category, experience, company, contact } = req.body;
 
   const job = new Job({
     title,
     description,
     requirements,
-    postedBy: req.user.userId, 
-    isApproved: false  
+    location,
+    salaryRange,
+    category,
+    experience,
+    company,
+    contact,
+    postedBy: req.user.userId,
+    isApproved: false,
   });
 
   try {
-    const savedJob = await job.save(); 
+    const savedJob = await job.save();
     res.status(201).json({ message: 'Job request submitted and pending approval.', job: savedJob });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -36,7 +42,7 @@ export const createJobRequest = async (req, res) => {
 
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ isApproved: true }); 
+    const jobs = await Job.find({ isApproved: true });
     res.json(jobs);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -76,6 +82,8 @@ export const searchJobs = async (req, res) => {
         { title: new RegExp(query, 'i') },
         { location: new RegExp(query, 'i') },
         { requirements: new RegExp(query, 'i') },
+        { category: new RegExp(query, 'i') },
+        { company: new RegExp(query, 'i') },
       ],
     };
 
@@ -121,7 +129,8 @@ export const getApplicationStatus = async (req, res) => {
 };
 
 export const updateJobListing = async (req, res) => {
-  const { title, description, requirements, location, salaryRange } = req.body;
+  const { title, description, requirements, location, salaryRange, category, experience, company, contact } = req.body;
+
   try {
     const job = await Job.findById(req.params.id);
     if (!job) {
@@ -132,14 +141,10 @@ export const updateJobListing = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
-    job.title = title || job.title;
-    job.description = description || job.description;
-    job.requirements = requirements || job.requirements;
-    job.location = location || job.location;
-    job.salaryRange = salaryRange || job.salaryRange;
-
+    Object.assign(job, { title, description, requirements, location, salaryRange, category, experience, company, contact });
     await job.save();
-    res.status(200).json({ message: 'Job listing updated' });
+
+    res.status(200).json({ message: 'Job listing updated', job });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -147,7 +152,7 @@ export const updateJobListing = async (req, res) => {
 
 export const deleteJob = async (req, res) => {
   const { id } = req.params;
-  const userId = req.user.userId; 
+  const userId = req.user.userId;
   const userRole = req.user.role;
 
   try {
@@ -182,18 +187,18 @@ export const getJobApplications = async (req, res) => {
 };
 
 export const jobDashboard = async (req, res) => {
-  const userId = req.user.userId; // Get the ID of the current user
-  const userRole = req.user.role; // Get the role of the current user (e.g., 'admin', 'employer', 'jobseeker')
+  const userId = req.user.userId;
+  const userRole = req.user.role;
 
   try {
     let jobs;
 
     if (userRole === 'admin') {
-      jobs = await Job.find(); // Admin sees all jobs
+      jobs = await Job.find();
     } else if (userRole === 'employer') {
-      jobs = await Job.find({ postedBy: userId }); // Employer sees only their jobs
+      jobs = await Job.find({ postedBy: userId });
     } else if (userRole === 'jobseeker') {
-      jobs = await Job.find({ isApproved: true }); // Job seekers see only approved jobs
+      jobs = await Job.find({ isApproved: true });
     } else {
       return res.status(403).json({ message: 'Unauthorized access' });
     }
