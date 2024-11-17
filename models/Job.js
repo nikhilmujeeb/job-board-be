@@ -5,15 +5,16 @@ const jobSchema = new mongoose.Schema({
   description: { type: String, required: true },
   location: { type: String, required: true },
   salaryRange: { type: String, required: true },
-  category: { type: String, required: true }, // Added category
-  experience: { type: String, required: true }, // Added experience level
-  company: { type: String, required: true }, // Added company name
-  contact: { type: String, required: true }, // Added contact email
+  category: { type: String, required: true }, 
+  experience: { type: String, required: true }, 
+  company: { type: String, required: true }, 
+  contact: { type: String, required: true }, 
   requirements: String,
+  jobType: { type: String, required: true }, 
   status: { type: String, enum: ['open', 'closed'], default: 'open' },
   postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   isApproved: { type: Boolean, default: false },
-}, { timestamps: true }); // Adds createdAt and updatedAt timestamps
+}, { timestamps: true });
 
 export default mongoose.model('Job', jobSchema);

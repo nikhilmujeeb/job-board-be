@@ -16,7 +16,7 @@ export const approveJobRequest = async (req, res) => {
 };
 
 export const createJobRequest = async (req, res) => {
-  const { title, description, requirements, location, salaryRange, category, experience, company, contact } = req.body;
+  const { title, description, requirements, location, salaryRange, category, experience, company, contact, jobType } = req.body;
 
   const job = new Job({
     title,
@@ -28,6 +28,7 @@ export const createJobRequest = async (req, res) => {
     experience,
     company,
     contact,
+    jobType, // Add jobType here
     postedBy: req.user.userId,
     isApproved: false,
   });
@@ -66,14 +67,14 @@ export const getJobById = async (req, res) => {
     if (!job) {
       return res.status(404).json({ message: 'Job not found' });
     }
-    res.json(job);
+    res.json(job); // jobType should be included here
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 export const searchJobs = async (req, res) => {
-  const { query } = req.query;
+  const { query, jobType } = req.query; // Handle jobType filter as well
 
   try {
     const searchCriteria = {
@@ -84,6 +85,7 @@ export const searchJobs = async (req, res) => {
         { requirements: new RegExp(query, 'i') },
         { category: new RegExp(query, 'i') },
         { company: new RegExp(query, 'i') },
+        ...(jobType ? [{ jobType: new RegExp(jobType, 'i') }] : []), // Include jobType filter if provided
       ],
     };
 
@@ -129,7 +131,7 @@ export const getApplicationStatus = async (req, res) => {
 };
 
 export const updateJobListing = async (req, res) => {
-  const { title, description, requirements, location, salaryRange, category, experience, company, contact } = req.body;
+  const { title, description, requirements, location, salaryRange, category, experience, company, contact, jobType } = req.body;
 
   try {
     const job = await Job.findById(req.params.id);
@@ -141,7 +143,7 @@ export const updateJobListing = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
-    Object.assign(job, { title, description, requirements, location, salaryRange, category, experience, company, contact });
+    Object.assign(job, { title, description, requirements, location, salaryRange, category, experience, company, contact, jobType }); // Add jobType here
     await job.save();
 
     res.status(200).json({ message: 'Job listing updated', job });
