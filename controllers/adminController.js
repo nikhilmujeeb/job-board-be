@@ -16,7 +16,7 @@ export const manageUsers = async (req, res) => {
 export const checkUserAdmin = async (req, res) => {
   try {
     if (req.user.role === 'admin') {
-      res.json({ message: 'User is an admin' });
+      res.json({ isAdmin: true });
     } else {
       res.status(403).json({ message: 'User is not an admin' });
     }
@@ -24,3 +24,4 @@ export const checkUserAdmin = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
