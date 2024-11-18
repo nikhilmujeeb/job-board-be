@@ -219,9 +219,10 @@ export const jobDashboard = async (req, res) => {
 };
 
 export const getPendingJobs = async (req, res) => {
-  console.log('Fetching pending jobs...'); 
+  console.log('Received request for pending jobs'); // Added log for debugging
   try {
     const pendingJobs = await Job.find({ isApproved: false });
+    console.log('Found pending jobs:', pendingJobs); // Check what data is being retrieved
     res.status(200).json({
       message: 'Pending jobs retrieved successfully',
       jobs: pendingJobs,
@@ -231,4 +232,3 @@ export const getPendingJobs = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve pending jobs' });
   }
 };
-
