@@ -220,8 +220,8 @@ export const jobDashboard = async (req, res) => {
 
 export const getPendingJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ isApproved: false }); // Fetch only unapproved jobs
-    res.status(200).json({ message: 'Pending jobs retrieved successfully', jobs });
+    const pendingJobs = await Job.find({ isApproved: false });
+    res.status(200).json({ message: 'Pending jobs retrieved successfully', jobs: pendingJobs });
   } catch (error) {
     console.error('Error fetching pending jobs:', error);
     res.status(500).json({ message: 'Failed to retrieve pending jobs' });
