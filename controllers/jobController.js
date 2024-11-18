@@ -2,16 +2,23 @@ import Job from '../models/Job.js';
 import path from 'path';
 
 export const approveJobRequest = async (req, res) => {
+  const { id } = req.params;
+
   try {
     const job = await Job.findByIdAndUpdate(
-      req.params.id,
-      { isApproved: true },
+      id,
+      { status: 'open', isApproved: true },
       { new: true }
     );
-    if (!job) return res.status(404).json({ message: 'Job not found' });
-    res.json({ message: 'Job approved successfully', job });
+
+    if (!job) {
+      return res.status(404).json({ message: 'Job not found' });
+    }
+
+    res.status(200).json({ message: 'Job approved successfully', job });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error approving job:', error);
+    res.status(500).json({ message: 'Failed to approve job' });
   }
 };
 
@@ -213,7 +220,7 @@ export const jobDashboard = async (req, res) => {
 
 export const getPendingJobs = async (req, res) => {
   try {
-    const pendingJobs = await Job.find({ status: 'pending' }); // Assuming 'status' is used to track job approval
+    const pendingJobs = await Job.find({ status: 'pending' });
     res.status(200).json({ jobs: pendingJobs });
   } catch (error) {
     console.error('Error fetching pending jobs:', error);
