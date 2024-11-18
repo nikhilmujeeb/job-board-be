@@ -210,3 +210,13 @@ export const jobDashboard = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getPendingJobs = async (req, res) => {
+  try {
+    const pendingJobs = await Job.find({ status: 'pending' }); // Assuming 'status' is used to track job approval
+    res.status(200).json({ jobs: pendingJobs });
+  } catch (error) {
+    console.error('Error fetching pending jobs:', error);
+    res.status(500).json({ message: 'Failed to fetch pending jobs' });
+  }
+};

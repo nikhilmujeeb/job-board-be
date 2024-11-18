@@ -1,7 +1,8 @@
 import express from 'express';
 import {
   createJobRequest, approveJobRequest, getJobs, uploadResume, getJobById, searchJobs,
-  applyForJob, getApplicationStatus, updateJobListing, deleteJob, getJobApplications, jobDashboard
+  applyForJob, getApplicationStatus, updateJobListing, deleteJob, getJobApplications, jobDashboard,
+  getPendingJobs
 } from '../controllers/jobController.js';
 import { authMiddleware, adminMiddleware } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/uploadMiddleware.js';
@@ -20,5 +21,6 @@ router.delete('/:id', authMiddleware, deleteJob);
 router.get('/applications/:id', authMiddleware, adminMiddleware, getJobApplications);
 router.post('/upload-resume', authMiddleware, upload.single('resume'), uploadResume);
 router.get('/:id', getJobById); 
+router.get('/pending', authMiddleware, adminMiddleware, getPendingJobs);
 
 export default router;
