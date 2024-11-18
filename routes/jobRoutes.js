@@ -21,6 +21,6 @@ router.delete('/:id', authMiddleware, deleteJob);
 router.get('/applications/:id', authMiddleware, adminMiddleware, getJobApplications);
 router.post('/upload-resume', authMiddleware, upload.single('resume'), uploadResume);
 router.get('/:id', getJobById); 
-router.get('/pending', authMiddleware, adminMiddleware, getPendingJobs);
+router.get('/pending', getPendingJobs);
 
 export default router;
