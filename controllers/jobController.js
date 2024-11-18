@@ -220,7 +220,7 @@ export const jobDashboard = async (req, res) => {
 
 export const getPendingJobs = async (req, res) => {
   try {
-    const pendingJobs = await Job.find({ isApproved: false });
+    const pendingJobs = await Job.find({ isApproved: false }); // Query for unapproved jobs
     res.status(200).json({
       message: 'Pending jobs retrieved successfully',
       jobs: pendingJobs,
