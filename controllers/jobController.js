@@ -219,13 +219,11 @@ export const jobDashboard = async (req, res) => {
 };
 
 export const getPendingJobs = async (req, res) => {
-  console.log('Request Params:', req.params); // Log params
-  console.log('Request Query:', req.query);   // Log query
+  console.log('GET /pending handler is being hit');
   try {
     const pendingJobs = await Job.find({ isApproved: false });
-    res.status(200).json({ message: 'Pending jobs retrieved successfully', jobs: pendingJobs });
+    res.json(pendingJobs);
   } catch (error) {
-    console.error('Error retrieving pending jobs:', error);
     res.status(500).json({ message: error.message });
   }
 };
