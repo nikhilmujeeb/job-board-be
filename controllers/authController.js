@@ -26,7 +26,7 @@ export const adminMiddleware = (req, res, next) => {
 };
 
 export const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;  // Add role to the destructuring
   
   try {
     const existingUser = await User.findOne({ email });
@@ -36,14 +36,15 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ name, email, password: hashedPassword });
+    // Include the role in the new user
+    const newUser = new User({ name, email, password: hashedPassword, role });
 
     await newUser.save();
 
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
     console.error('Error registering user:', error);
-    res.status(500).json({ message: error.message });  
+    res.status(500).json({ message: error.message });
   }
 };
 
