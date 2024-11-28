@@ -22,7 +22,8 @@ const profileSchema = new mongoose.Schema({
     linkedin: String,
     github: String,
     twitter: String
-  }
+  },
+  resume: { type: String } 
 });
 
 export default mongoose.model('Profile', profileSchema);
