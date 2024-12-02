@@ -12,7 +12,7 @@ const jobSchema = new mongoose.Schema(
     contact: { type: String, required: true }, 
     requirements: String,
     jobType: { type: String, required: true }, 
-    status: { type: String, enum: ['pending', 'open', 'closed'], default: 'pending' }, // Updated with 'pending'
+    status: { type: String, enum: ['pending', 'open', 'closed'], default: 'pending' }, 
     postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     isApproved: { type: Boolean, default: false }, 
