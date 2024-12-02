@@ -228,17 +228,20 @@ export const getPendingJobs = async (req, res) => {
   }
 };
 
-export const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract token from the Authorization header
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
+export const getJobsByEmployer = async (req, res) => {
+  try {
+    const employerId = req.user._id; // Ensure req.user._id is populated by the authMiddleware
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: 'Invalid token' });
+    // Query jobs with the `postedBy` field matching the employer's ID
+    const jobs = await Job.find({ postedBy: employerId });
+
+    if (!jobs.length) {
+      return res.status(404).json({ message: 'No jobs found for this employer.' });
     }
-    req.user = decoded; // Attach the decoded user information to the request
-    next();
-  });
+
+    res.status(200).json({ jobs });
+  } catch (error) {
+    console.error('Error fetching jobs for employer:', error);
+    res.status(500).json({ message: 'Error fetching jobs.' });
+  }
 };
