@@ -231,8 +231,8 @@ export const getPendingJobs = async (req, res) => {
 export const getJobsByEmployer = async (req, res) => {
   try {
     const employerId = req.user._id; // Ensure req.user._id is populated by the authMiddleware
+    console.log('Employer ID:', employerId); // Log employer ID for debugging
 
-    // Query jobs with the `postedBy` field matching the employer's ID
     const jobs = await Job.find({ postedBy: employerId });
 
     if (!jobs.length) {
