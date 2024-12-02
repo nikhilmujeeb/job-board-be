@@ -10,7 +10,6 @@ import upload from '../middlewares/uploadMiddleware.js';
 const router = express.Router();
 
 router.post('/request', authMiddleware, createJobRequest);
-router.
 router.put('/approve/:id', authMiddleware, adminMiddleware, approveJobRequest);
 router.get('/dashboard', authMiddleware, jobDashboard); 
 router.get('/search', searchJobs); 
