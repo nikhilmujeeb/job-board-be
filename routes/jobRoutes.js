@@ -2,7 +2,7 @@ import express from 'express';
 import {
   createJobRequest, approveJobRequest, getJobs, uploadResume, getJobById, searchJobs,
   applyForJob, getApplicationStatus, updateJobListing, deleteJob, getJobApplications, jobDashboard,
-  getPendingJobs, getJobsByEmployer, deleteJob
+  getPendingJobs, getJobsByEmployer
 } from '../controllers/jobController.js';
 import { authMiddleware, adminMiddleware } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/uploadMiddleware.js';
@@ -10,7 +10,7 @@ import upload from '../middlewares/uploadMiddleware.js';
 const router = express.Router();
 
 router.post('/request', authMiddleware, createJobRequest);
-router.delete('/delete-job', authMiddleware, deleteJob)
+router.
 router.put('/approve/:id', authMiddleware, adminMiddleware, approveJobRequest);
 router.get('/dashboard', authMiddleware, jobDashboard); 
 router.get('/search', searchJobs); 
