@@ -111,14 +111,21 @@ export const applyForJob = async (req, res) => {
       return res.status(404).json({ message: 'Job not found' });
     }
 
+    console.log('Job before applying:', job);
+    console.log('User ID:', req.user.userId);
+
     if (job.applicants.includes(req.user.userId)) {
       return res.status(400).json({ message: 'Already applied for this job' });
     }
 
     job.applicants.push(req.user.userId);
     await job.save();
+
+    console.log('Job after applying:', job);
+
     res.status(200).json({ message: 'Applied successfully' });
   } catch (error) {
+    console.error('Error in applyForJob:', error);
     res.status(500).json({ message: error.message });
   }
 };
