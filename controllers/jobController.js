@@ -228,22 +228,20 @@ export const getPendingJobs = async (req, res) => {
   }
 };
 
-// Example route handler
-app.get('/api/job/employer-jobs', authMiddleware, async (req, res) => {
-  const employerId = req.user.userId;  // Access the correct field name here
-  if (!employerId) {
-    return res.status(400).json({ message: "Employer ID is missing." });
-  }
-
+export const getJobsByEmployer = async (req, res) => {
   try {
-    // Fetch the jobs posted by the employer
-    const jobs = await Job.find({ employerId }); // Adjust your model to use employerId
+    const employerId = req.user._id; // Use _id here since it's now available
+    console.log('Employer ID:', employerId); // Log employer ID for debugging
+
+    const jobs = await Job.find({ postedBy: employerId });
+
     if (!jobs.length) {
-      return res.status(404).json({ message: "No jobs found for this employer." });
+      return res.status(404).json({ message: 'No jobs found for this employer.' });
     }
-    res.json({ jobs });
-  } catch (err) {
-    console.error("Error fetching jobs:", err);
-    res.status(500).json({ message: "Error fetching jobs." });
+
+    res.status(200).json({ jobs });
+  } catch (error) {
+    console.error('Error fetching jobs for employer:', error);
+    res.status(500).json({ message: 'Error fetching jobs.' });
   }
-});
+};

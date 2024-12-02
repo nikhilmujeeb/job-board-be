@@ -5,14 +5,14 @@ export const authMiddleware = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
-  
+
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).json({ message: 'Invalid token' });
     }
 
-    // Ensure userId is correctly attached to the req.user object
-    req.user = { userId: decoded.userId, role: decoded.role, name: decoded.name };
+    // Ensure _id is correctly populated
+    req.user = { _id: decoded.userId, role: decoded.role, name: decoded.name };
 
     next();
   });
