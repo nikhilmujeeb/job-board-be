@@ -230,12 +230,11 @@ export const getPendingJobs = async (req, res) => {
 
 export const getJobsByEmployer = async (req, res) => {
   try {
-    const employerId = req.user.id; // Assuming `req.user` contains the authenticated employer's ID
-
-    const jobs = await Job.find({ employer: employerId }); // Ensure the Job model has an `employer` field
+    const employerId = req.user.id; 
+    const jobs = await Job.find({ postedBy: employerId });
     res.status(200).json({ jobs });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching jobs for employer:", { employerId, error });
     res.status(500).json({ message: "Error fetching jobs." });
   }
 };
