@@ -20,8 +20,8 @@ router.delete('/:id', authMiddleware, deleteJob);
 router.get('/applications/:id', authMiddleware, adminMiddleware, getJobApplications);
 router.post('/upload-resume', authMiddleware, upload.single('resume'), uploadResume);
 router.get('/pending', getPendingJobs);
-router.get('/:id', getJobById); 
 router.get('/', getJobs);
 router.get("/employer-jobs", authMiddleware, getJobsByEmployer);
+router.get('/:id', getJobById); 
 
 export default router;
