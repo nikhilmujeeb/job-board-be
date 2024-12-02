@@ -230,10 +230,13 @@ export const getPendingJobs = async (req, res) => {
 
 export const getJobsByEmployer = async (req, res) => {
   try {
-    const employerId = req.user._id; // Use _id here since it's now available
-    console.log('Employer ID:', employerId); // Log employer ID for debugging
+    const employerId = req.user._id; // Ensure this is populated from the authMiddleware
+    console.log('Employer ID:', employerId); // Log to check employer ID
 
-    const jobs = await Job.find({ postedBy: employerId });
+    // Fetch jobs posted by the employer and populate the applicants' details
+    const jobs = await Job.find({ postedBy: employerId })
+      .populate('applicants', 'firstName lastName email') // Replace field names based on your User model
+      .exec();
 
     if (!jobs.length) {
       return res.status(404).json({ message: 'No jobs found for this employer.' });
