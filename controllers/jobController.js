@@ -230,11 +230,18 @@ export const getPendingJobs = async (req, res) => {
 
 export const getJobsByEmployer = async (req, res) => {
   try {
-    const employerId = req.user.id; 
+    const employerId = req.user._id; // Ensure req.user._id is populated by the authMiddleware
+
+    // Query jobs with the `postedBy` field matching the employer's ID
     const jobs = await Job.find({ postedBy: employerId });
+
+    if (!jobs.length) {
+      return res.status(404).json({ message: 'No jobs found for this employer.' });
+    }
+
     res.status(200).json({ jobs });
   } catch (error) {
-    console.error("Error fetching jobs for employer:", { employerId, error });
-    res.status(500).json({ message: "Error fetching jobs." });
+    console.error('Error fetching jobs for employer:', error);
+    res.status(500).json({ message: 'Error fetching jobs.' });
   }
 };
