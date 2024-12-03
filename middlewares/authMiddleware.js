@@ -23,7 +23,7 @@ export const authMiddleware = (req, res, next) => {
 
     next();
   });
-};s
+};
 
 export const adminMiddleware = (req, res, next) => {
   if (req.user?.role !== "admin") {
