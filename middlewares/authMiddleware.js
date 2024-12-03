@@ -10,10 +10,8 @@ export const authMiddleware = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: 'Invalid token' });
     }
-
-    // Ensure _id is correctly populated
     req.user = { _id: decoded.userId, role: decoded.role, name: decoded.name };
-
+    console.log("User ID from authMiddleware:", req.user.userId);
     next();
   });
 };
