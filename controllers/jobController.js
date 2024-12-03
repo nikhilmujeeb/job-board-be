@@ -106,31 +106,27 @@ export const searchJobs = async (req, res) => {
 
 export const applyForJob = async (req, res) => {
   try {
-    console.log("Request Params ID:", req.params.id);
-    console.log("User ID from Middleware:", req.user.userId);
+    const { id } = req.params; // Job ID
+    const userId = req.user._id; // Populated from authMiddleware
 
-    // Find the job by ID
-    const job = await Job.findById(req.params.id);
+    console.log("User applying for job:", userId);
+
+    const job = await Job.findById(id);
     if (!job) {
-      console.error("Job not found for ID:", req.params.id);
-      return res.status(404).json({ message: "Job not found" });
+      return res.status(404).json({ message: 'Job not found' });
     }
 
-    // Check if the user already applied
-    if (job.applicants.includes(req.user.userId)) {
-      console.warn("User already applied for this job:", req.user.userId);
-      return res.status(400).json({ message: "Already applied for this job" });
+    if (job.applicants.includes(userId)) {
+      return res.status(400).json({ message: 'You have already applied for this job' });
     }
 
-    // Add the user to the applicants
-    job.applicants.push(req.user.userId);
+    job.applicants.push(userId);
     await job.save();
-    console.log("Job successfully updated:", job);
 
-    res.status(200).json({ message: "Applied successfully" });
+    res.status(200).json({ message: 'Applied successfully' });
   } catch (error) {
-    console.error("Error in applyForJob:", error);
-    res.status(500).json({ message: error.message });
+    console.error("Error applying for job:", error);
+    res.status(500).json({ message: 'Failed to apply for job' });
   }
 };
 

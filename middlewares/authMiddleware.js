@@ -10,11 +10,20 @@ export const authMiddleware = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: 'Invalid token' });
     }
-    req.user = { _id: decoded.userId, role: decoded.role, name: decoded.name };
-    console.log("User ID from authMiddleware:", req.user.userId);
+    
+    // Properly assigning user fields to `req.user`
+    req.user = { 
+      _id: decoded.userId, 
+      role: decoded.role, 
+      name: decoded.name 
+    };
+    
+    // Correcting the log statement to match `req.user` structure
+    console.log("User ID from authMiddleware:", req.user._id);
+
     next();
   });
-};
+};s
 
 export const adminMiddleware = (req, res, next) => {
   if (req.user?.role !== "admin") {
