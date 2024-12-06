@@ -11,13 +11,16 @@ const profileSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   bio: { type: String },
   skills: [String],
-  education: [{
-    school: String,
-    degree: String,
-    fieldOfStudy: String,
-    startDate: Date,
-    endDate: Date
-  }],
+  education: {
+    type: [{
+      school: String,
+      degree: String,
+      fieldOfStudy: String,
+      startDate: Date,
+      endDate: Date
+    }],
+    validate: [arr => arr.length > 0, 'Education must not be empty']
+  },
   experience: [{
     company: String,
     jobTitle: String,
@@ -30,7 +33,7 @@ const profileSchema = new mongoose.Schema({
     github: String,
     twitter: String
   },
-  resume: { type: String } 
+  resume: { type: String, default: null } // Default to null if no resume uploaded
 });
 
 export default mongoose.model('Profile', profileSchema);

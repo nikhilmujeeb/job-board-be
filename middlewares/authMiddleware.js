@@ -5,22 +5,16 @@ export const authMiddleware = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
-
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).json({ message: 'Invalid token' });
     }
-    
-    // Properly assigning user fields to `req.user`
     req.user = { 
       _id: decoded.userId, 
       role: decoded.role, 
       name: decoded.name 
     };
-    
-    // Correcting the log statement to match `req.user` structure
     console.log("User ID from authMiddleware:", req.user._id);
-
     next();
   });
 };
