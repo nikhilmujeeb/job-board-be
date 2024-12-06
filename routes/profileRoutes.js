@@ -5,7 +5,7 @@ import Profile from '../models/Profile.js';
 
 const router = express.Router();
 
-router.post('/profile', authMiddleware, createOrUpdateProfile);
+router.post('/profile', createOrUpdateProfile);
 router.get('/profile/:id', getProfileById);
 
 router.get('/profiles', authMiddleware, async (req, res) => {
