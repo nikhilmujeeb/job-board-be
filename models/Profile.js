@@ -1,5 +1,27 @@
 import mongoose from 'mongoose';
 
+const educationSchema = new mongoose.Schema({
+  school: { type: String, required: true },
+  degree: { type: String, required: true },
+  fieldOfStudy: { type: String, required: true },
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
+});
+
+const experienceSchema = new mongoose.Schema({
+  company: { type: String, required: true },
+  jobTitle: { type: String, required: true },
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
+  description: { type: String, required: true },
+});
+
+const socialLinksSchema = new mongoose.Schema({
+  linkedin: { type: String },
+  github: { type: String },
+  twitter: { type: String },
+});
+
 const profileSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   firstName: { type: String, required: true },
@@ -8,29 +30,14 @@ const profileSchema = new mongoose.Schema({
   dateOfBirth: { type: Date, required: true },
   address: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  countryCode: { type: String, required: true },
   phone: { type: String, required: true },
   bio: { type: String },
-  skills: [String], // Array of skill strings
-  education: [{
-    school: String,
-    degree: String,
-    fieldOfStudy: String,
-    startDate: Date,
-    endDate: Date
-  }],
-  experience: [{
-    company: String,
-    jobTitle: String,
-    startDate: Date,
-    endDate: Date,
-    description: String
-  }],
-  socialLinks: {
-    linkedin: String,
-    github: String,
-    twitter: String
-  },
-  resume: { type: String }, // Store resume URL or file reference if uploaded
-});
+  skills: { type: [String] },
+  education: { type: [educationSchema] },
+  experience: { type: [experienceSchema] },
+  socialLinks: { type: socialLinksSchema },
+  resume: { type: String }, // Path or URL for the uploaded resume file
+}, { timestamps: true });
 
 export default mongoose.model('Profile', profileSchema);
