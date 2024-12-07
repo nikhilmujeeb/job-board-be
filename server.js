@@ -21,7 +21,7 @@ const app = express();
 
 // Enable CORS for requests from the frontend (localhost:3000)
 app.use(cors({
-  origin: 'http://localhost:3000', // Replace with your frontend URL if needed
+  origin: 'https://job-board-fe-pwmj.onrender.com', // Replace with your frontend URL if needed
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow necessary HTTP methods
   credentials: true, // Allow cookies to be sent with requests
 }));
