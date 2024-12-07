@@ -15,6 +15,6 @@ router.post('/profile', authMiddleware, createOrUpdateProfile);
 router.get('/profile/:id', authMiddleware, getProfileById);
 
 // Get all profiles
-router.get('/profiles', authMiddleware, getAllProfiles);
+router.get('/profiles', getAllProfiles);
 
 export default router;
