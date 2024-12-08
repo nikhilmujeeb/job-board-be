@@ -49,16 +49,11 @@ export const createOrUpdateProfile = async (req, res) => {
 // Controller to retrieve a profile by ID
 export const getProfileById = async (req, res) => {
   const { id } = req.params;
-
-  console.log(`Fetching profile for user ID: ${id}`);  // Log for debugging
-
   try {
     const profile = await Profile.findById(id).populate('user', 'name email');
-
     if (!profile) {
       return res.status(404).json({ message: 'Profile not found.' });
     }
-
     res.status(200).json(profile);
   } catch (error) {
     console.error('Error fetching profile:', error);
