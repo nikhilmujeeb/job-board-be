@@ -1,13 +1,20 @@
 import mongoose from 'mongoose';
+import connectDB from './config/db.js'; // Adjust the path to your database connection file
+import Job from './models/Job.js'; // Adjust the path to your Job model
 
-const connectDB = async () => {
+(async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('Database connected');
-  } catch (error) {
-    console.error('Database connection error:', error.message);
-    process.exit(1);
-  }
-};
+    // Connect to the database
+    await connectDB();
 
-export default connectDB;
+    // Fetch jobs and populate the company name
+    const appliedJobs = await Job.find().populate('company', 'name');
+    console.log('Applied Jobs:', appliedJobs);
+
+    // Close the database connection
+    mongoose.connection.close();
+  } catch (error) {
+    console.error('Error fetching applied jobs:', error.message);
+    mongoose.connection.close();
+  }
+})();
