@@ -10,19 +10,19 @@ import multer from 'multer';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); 
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}_${file.originalname}`); 
   }
 });
 
+const upload = multer({ storage: storage });
+
 const router = express.Router();
 
 router.post('/profile', authMiddleware, createOrUpdateProfile);
-
 router.get('/profile/:id', authMiddleware, getProfileById);
-
 router.get('/profiles', getAllProfiles);
 
 router.post('/upload-resume', authMiddleware, upload.single('resume'), uploadResume);
