@@ -10,13 +10,15 @@ router.get('/profile', authMiddleware, getUserProfile);
 
 router.get('/getJobsApplied', authMiddleware, async (req, res) => {
     try {
-      // Fetch jobs applied by the user
+      // Fetch jobs applied by the user (company field is a string, no need to populate)
       const appliedJobs = await Job.find({ applicants: req.user._id });
+  
+      // Return jobs with company field directly
       res.json({ jobs: appliedJobs });
     } catch (error) {
       console.error("Error fetching applied jobs:", error);
       res.status(500).json({ message: 'Failed to fetch applied jobs' });
     }
-});
+  });  
 
 export default router;
