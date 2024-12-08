@@ -50,10 +50,17 @@ export const createOrUpdateProfile = async (req, res) => {
 export const getProfileById = async (req, res) => {
   const { id } = req.params;
   try {
-    const profile = await Profile.findById(id).populate('user', 'name email');
+    const profile = await Profile.findOne({ user: id }) // Ensure you're searching for a profile linked to this user
+      .populate('user', 'firstName lastName email'); // Ensure that the user is populated with necessary fields
+
     if (!profile) {
-      return res.status(404).json({ message: 'Profile not found.' });
+      return res.status(404).json({ message: 'Profile not found for this user.' });
     }
+
+    if (!profile.user) {
+      return res.status(404).json({ message: 'Profile is not linked to a user.' });
+    }
+
     res.status(200).json(profile);
   } catch (error) {
     console.error('Error fetching profile:', error);
