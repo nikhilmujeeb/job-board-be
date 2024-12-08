@@ -8,7 +8,7 @@ const jobSchema = new mongoose.Schema(
     salaryRange: { type: String, required: true },
     category: { type: String, required: true },
     experience: { type: String, required: true },
-    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true }, // Updated to reference the Company model
+    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true },
     contact: { type: String, required: true },
     requirements: { type: String },
     jobType: { type: String, required: true },
