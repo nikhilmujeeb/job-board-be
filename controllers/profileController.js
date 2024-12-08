@@ -18,7 +18,7 @@ export const createOrUpdateProfile = async (req, res) => {
 
   try {
     const profileData = {
-      user: req.user.userId,
+      user: req.user._id,
       firstName,
       middleName,
       lastName,
