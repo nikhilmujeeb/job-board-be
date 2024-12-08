@@ -1,6 +1,7 @@
 import express from 'express';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import Job from '../models/Job.js'; 
+import { getUserProfile } from '../controllers/userController.js';
 
 const router = express.Router();
 
