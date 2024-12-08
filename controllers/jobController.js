@@ -57,17 +57,6 @@ export const getJobs = async (req, res) => {
   }
 };
 
-export const uploadResume = (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
-    }
-    res.status(200).json({ message: 'Resume uploaded successfully', filePath: req.file.path });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 export const getJobById = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id).populate('postedBy', 'name email');
