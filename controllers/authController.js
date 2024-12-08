@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 export const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract token from the Authorization header
+  const token = req.headers.authorization?.split(' ')[1]; 
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
@@ -12,7 +12,7 @@ export const authMiddleware = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: 'Invalid token' });
     }
-    req.user = decoded; // Attach the decoded user information to the request
+    req.user = decoded; 
     next();
   });
 };
@@ -28,7 +28,7 @@ export const adminMiddleware = (req, res, next) => {
 };
 
 export const registerUser = async (req, res) => {
-  const { name, email, password, role } = req.body;  // Add role to the destructuring
+  const { name, email, password, role } = req.body; 
   
   try {
     const existingUser = await User.findOne({ email });
@@ -38,7 +38,6 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Include the role in the new user
     const newUser = new User({ name, email, password: hashedPassword, role });
 
     await newUser.save();

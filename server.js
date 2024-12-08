@@ -20,9 +20,9 @@ connectDB();
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://your-production-frontend-url.com'], // List of allowed origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow necessary HTTP methods
-  credentials: true, // Allow cookies to be sent with requests
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
 }));
 
 app.use(express.json());

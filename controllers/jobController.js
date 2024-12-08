@@ -1,5 +1,4 @@
 import Job from '../models/Job.js';
-import path from 'path';
 
 export const approveJobRequest = async (req, res) => {
   const { id } = req.params;
@@ -35,7 +34,7 @@ export const createJobRequest = async (req, res) => {
     experience,
     company,
     contact,
-    jobType, // Add jobType here
+    jobType,
     postedBy: req.user.userId,
     isApproved: false,
   });
@@ -63,14 +62,14 @@ export const getJobById = async (req, res) => {
     if (!job) {
       return res.status(404).json({ message: 'Job not found' });
     }
-    res.json(job); // jobType should be included here
+    res.json(job);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 export const searchJobs = async (req, res) => {
-  const { query, jobType } = req.query; // Handle jobType filter as well
+  const { query, jobType } = req.query;
 
   try {
     const searchCriteria = {
@@ -81,7 +80,7 @@ export const searchJobs = async (req, res) => {
         { requirements: new RegExp(query, 'i') },
         { category: new RegExp(query, 'i') },
         { company: new RegExp(query, 'i') },
-        ...(jobType ? [{ jobType: new RegExp(jobType, 'i') }] : []), // Include jobType filter if provided
+        ...(jobType ? [{ jobType: new RegExp(jobType, 'i') }] : []),
       ],
     };
 
@@ -95,8 +94,8 @@ export const searchJobs = async (req, res) => {
 
 export const applyForJob = async (req, res) => {
   try {
-    const { id } = req.params; // Job ID
-    const userId = req.user._id; // Populated from authMiddleware
+    const { id } = req.params;
+    const userId = req.user._id;
 
     console.log("User applying for job:", userId);
 
@@ -146,7 +145,7 @@ export const updateJobListing = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
-    Object.assign(job, { title, description, requirements, location, salaryRange, category, experience, company, contact, jobType }); // Add jobType here
+    Object.assign(job, { title, description, requirements, location, salaryRange, category, experience, company, contact, jobType }); 
     await job.save();
 
     res.status(200).json({ message: 'Job listing updated', job });
@@ -226,12 +225,11 @@ export const getPendingJobs = async (req, res) => {
 
 export const getJobsByEmployer = async (req, res) => {
   try {
-    const employerId = req.user._id; // Ensure this is populated from the authMiddleware
-    console.log('Employer ID:', employerId); // Log to check employer ID
+    const employerId = req.user._id; 
+    console.log('Employer ID:', employerId); 
 
-    // Fetch jobs posted by the employer and populate the applicants' details
     const jobs = await Job.find({ postedBy: employerId })
-      .populate('applicants', 'firstName lastName email') // Replace field names based on your User model
+      .populate('applicants', 'firstName lastName email') 
       .exec();
 
     if (!jobs.length) {

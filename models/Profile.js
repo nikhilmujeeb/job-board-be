@@ -37,7 +37,7 @@ const profileSchema = new mongoose.Schema({
   education: { type: [educationSchema] },
   experience: { type: [experienceSchema] },
   socialLinks: { type: socialLinksSchema },
-  resume: { type: String }, // Path or URL for the uploaded resume file
+  resume: { type: String },
 }, { timestamps: true });
 
 export default mongoose.model('Profile', profileSchema);

@@ -5,7 +5,6 @@ import {
   getPendingJobs, getJobsByEmployer
 } from '../controllers/jobController.js';
 import { authMiddleware, adminMiddleware } from '../middlewares/authMiddleware.js';
-import upload from '../middlewares/uploadMiddleware.js';
 
 const router = express.Router();
 

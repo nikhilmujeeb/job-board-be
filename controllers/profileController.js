@@ -1,13 +1,11 @@
 import Profile from '../models/Profile.js';
 
-// Controller to create or update a profile
 export const createOrUpdateProfile = async (req, res) => {
   const {
     firstName, middleName, lastName, dateOfBirth, address, email, phone,
     bio, skills, education, experience, socialLinks
   } = req.body;
 
-  // Validate required fields
   const requiredFields = [
     firstName, lastName, dateOfBirth, address, email, phone, bio, skills, education, experience, socialLinks,
   ];
@@ -46,12 +44,11 @@ export const createOrUpdateProfile = async (req, res) => {
   }
 };
 
-// Controller to retrieve a profile by ID
 export const getProfileById = async (req, res) => {
   const { id } = req.params;
   try {
-    const profile = await Profile.findOne({ user: id }) // Ensure you're searching for a profile linked to this user
-      .populate('user', 'firstName lastName email'); // Ensure that the user is populated with necessary fields
+    const profile = await Profile.findOne({ user: id }) 
+      .populate('user', 'firstName lastName email'); 
 
     if (!profile) {
       return res.status(404).json({ message: 'Profile not found for this user.' });
@@ -68,7 +65,6 @@ export const getProfileById = async (req, res) => {
   }
 };
 
-// Controller to retrieve all profiles
 export const getAllProfiles = async (req, res) => {
   try {
     const profiles = await Profile.find().populate('user', 'name email');
