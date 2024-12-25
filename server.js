@@ -46,5 +46,12 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/job', jobRoutes);
 app.use('/api/id', profileRoutes);
 
+const buildPath = path.join(__dirname, 'client', 'build');
+app.use(express.static(buildPath));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(buildPath, 'index.html'));
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
