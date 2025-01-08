@@ -1,4 +1,5 @@
 import Job from '../models/Job.js';
+import mongoose from 'mongoose';
 
 export const approveJobRequest = async (req, res) => {
   const { id } = req.params;
