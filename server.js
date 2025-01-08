@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
-import cors from 'cors';
+import cors from 'cors'; // Keep this line
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
@@ -19,7 +19,8 @@ connectDB();
 
 const app = express();
 
-const cors = require('cors');
+// Remove the following line
+// const cors = require('cors'); 
 
 const allowedOrigins = [
   'http://localhost:3000', // Development
