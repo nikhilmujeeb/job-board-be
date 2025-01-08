@@ -154,21 +154,35 @@ export const updateJobListing = async (req, res) => {
   }
 };
 
-const deleteJob = async (req, res) => {
+export const deleteJob = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user?.userId;
+  const userRole = req.user?.role;
 
+  // Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: 'Invalid job ID' });
+    return res.status(400).json({ message: 'Invalid Job ID' });
   }
 
   try {
-    const job = await Job.findByIdAndDelete(id);
+    // Find the job by ID
+    const job = await Job.findById(id);
+
     if (!job) {
       return res.status(404).json({ message: 'Job not found' });
     }
+
+    // Check if the user is authorized to delete the job
+    if (userRole !== 'admin' && userRole !== 'employer' && job.postedBy.toString() !== userId) {
+      return res.status(403).json({ message: 'Forbidden: Only the admin or the job poster can delete this job' });
+    }
+
+    // Delete the job
+    await job.deleteOne();
     res.status(200).json({ message: 'Job deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error deleting job:', error.message);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
