@@ -19,8 +19,19 @@ connectDB();
 
 const app = express();
 
+const allowedOrigins = [
+  'https://job-board-fe-pwmj.onrender.com', // Production frontend
+  'http://localhost:3000', // Development frontend
+];
+
 app.use(cors({
-  origin: 'https://job-board-fe-pwmj.onrender.com',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
