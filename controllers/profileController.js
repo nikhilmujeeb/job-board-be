@@ -48,14 +48,10 @@ export const getProfileById = async (req, res) => {
   const { id } = req.params;
   try {
     const profile = await Profile.findOne({ user: id }) 
-      .populate('user', 'firstName lastName email'); 
+      .populate('user', 'firstName lastName email');
 
     if (!profile) {
       return res.status(404).json({ message: 'Profile not found for this user.' });
-    }
-
-    if (!profile.user) {
-      return res.status(404).json({ message: 'Profile is not linked to a user.' });
     }
 
     res.status(200).json(profile);
