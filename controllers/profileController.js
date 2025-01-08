@@ -7,10 +7,10 @@ export const createOrUpdateProfile = async (req, res) => {
   } = req.body;
 
   const requiredFields = [
-    firstName, lastName, dateOfBirth, address, email, phone, bio, skills, education, experience, socialLinks,
+    firstName, lastName, dateOfBirth, address, email, phone, bio, skills, education, experience
   ];
-  
-  if (requiredFields.some(field => !field)) {
+
+  if (requiredFields.some(field => !field) || (Array.isArray(socialLinks) && socialLinks.length === 0)) {
     return res.status(400).json({ message: 'All fields are required to create or update a profile.' });
   }
 
@@ -35,11 +35,11 @@ export const createOrUpdateProfile = async (req, res) => {
       { user: req.user._id },
       { $set: profileData },
       { new: true, upsert: true }
-    );    
+    );
 
     res.status(200).json({ message: 'Profile saved successfully.', profile });
   } catch (error) {
-    console.error('Error saving profile:', error);
+    console.error('Error saving profile:', error.message);
     res.status(500).json({ message: 'Internal server error. Please try again later.' });
   }
 };
@@ -107,7 +107,7 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json(profile);
   } catch (error) {
-    console.error('Error updating profile:', error);
+    console.error('Error updating profile:', error.message);
     res.status(500).json({ message: 'Error updating profile. Please try again later.' });
   }
 };
