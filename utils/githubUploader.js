@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const uploadToGitHub = async (fileName, content) => {
-  const url = `https://api.github.com/repos/your-username/your-repo/contents/${fileName}`;
+  const url = `https://api.github.com/repos/nikhilmujeeb/job-board-be/contents/${fileName}`;
   const base64Content = Buffer.from(content).toString('base64');
 
   const response = await axios.put(
@@ -15,7 +15,7 @@ const uploadToGitHub = async (fileName, content) => {
     },
     {
       headers: {
-        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, // Use environment variable for token
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
       },
     }
   );

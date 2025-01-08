@@ -89,17 +89,26 @@ export const getAllProfiles = async (req, res) => {
 
 export const uploadResume = async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded. Please upload a resume.' });
+    }
+
     const filePath = req.file.path;
     const fileContent = fs.readFileSync(filePath);
     const fileName = `resumes/${req.file.originalname}`;
 
+    console.log(`Uploading resume: ${fileName}`);
+
     const result = await uploadToGitHub(fileName, fileContent);
+
+    console.log('GitHub upload result:', result);
 
     fs.unlinkSync(filePath);
 
     res.status(200).json({ message: 'Resume uploaded successfully to GitHub', data: result });
   } catch (error) {
     console.error('Error uploading resume:', error);
+
     res.status(500).json({ message: 'Failed to upload resume', error: error.message });
   }
 };
