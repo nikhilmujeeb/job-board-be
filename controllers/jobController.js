@@ -170,7 +170,7 @@ export const deleteJob = async (req, res) => {
       return res.status(404).json({ message: 'Job not found' });
     }
 
-    if (userRole !== 'admin' && job.postedBy.toString() !== userId) {
+    if (userRole !== 'admin'  && userRole !== 'employer' && job.postedBy.toString() !== userId) {
       return res.status(403).json({ message: 'Forbidden: Only the admin or the job poster can delete this job' });
     }
 
