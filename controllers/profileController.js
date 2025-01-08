@@ -32,10 +32,10 @@ export const createOrUpdateProfile = async (req, res) => {
     };
 
     const profile = await Profile.findOneAndUpdate(
-      { user: req.user.userId },
+      { user: req.user._id },
       { $set: profileData },
       { new: true, upsert: true }
-    );
+    );    
 
     res.status(200).json({ message: 'Profile saved successfully.', profile });
   } catch (error) {
