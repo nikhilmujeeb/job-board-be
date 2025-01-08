@@ -24,7 +24,7 @@ const router = express.Router();
 
 router.post('/profile', authMiddleware, createOrUpdateProfile);
 router.get('/profile/:id', authMiddleware, getProfileById);
-router.put('/api/profile/:id', updateProfile);
+router.put('/profile/:id', updateProfile);
 router.get('/profiles', getAllProfiles);
 
 router.post('/upload-resume', authMiddleware, upload.single('resume'), uploadResume);
