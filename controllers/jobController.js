@@ -142,7 +142,7 @@ export const updateJobListing = async (req, res) => {
       return res.status(404).json({ message: 'Job not found' });
     }
 
-    if (job.postedBy.toString() !== req.user.userId && req.user.role !== 'admin') {
+    if (job.postedBy.toString() !== req.user.userId && req.user.role !== 'employer') {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
