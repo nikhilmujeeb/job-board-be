@@ -29,15 +29,26 @@ const profileSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
   address: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: { 
+    type: String, 
+    required: true, 
+    unique: true, 
+    match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 
+  },
   countryCode: { type: String, required: true },
-  phone: { type: String, required: true },
+  phone: { 
+    type: String, 
+    required: true, 
+    match: /^[0-9]{10}$/ 
+  },
   bio: { type: String },
   skills: { type: [String] },
   education: { type: [educationSchema] },
   experience: { type: [experienceSchema] },
   socialLinks: { type: socialLinksSchema },
-  resume: { type: String },
+  resume: { type: String }, 
 }, { timestamps: true });
+
+profileSchema.index({ user: 1 });
 
 export default mongoose.model('Profile', profileSchema);
