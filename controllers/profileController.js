@@ -1,4 +1,7 @@
 import Profile from '../models/Profile.js';
+import fs from 'fs';
+import path from 'path';
+import uploadToGitHub from '../utils/githubUploader.js';
 
 export const createOrUpdateProfile = async (req, res) => {
   const {
@@ -83,20 +86,31 @@ export const getAllProfiles = async (req, res) => {
   }
 };
 
-export const uploadResume = (req, res) => {
+
+export const uploadResume = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
-    }
-    res.status(200).json({ message: 'Resume uploaded successfully', filePath: req.file.path });
+    const filePath = req.file.path;
+    const fileContent = fs.readFileSync(filePath);
+    const fileName = `resumes/${req.file.originalname}`;
+
+    const result = await uploadToGitHub(fileName, fileContent);
+
+    fs.unlinkSync(filePath);
+
+    res.status(200).json({ message: 'Resume uploaded successfully to GitHub', data: result });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error uploading resume:', error);
+    res.status(500).json({ message: 'Failed to upload resume', error: error.message });
   }
 };
 
 export const updateProfile = async (req, res) => {
   const { id } = req.params;
   const updatedData = req.body;
+
+  if (req.file) {
+    updatedData.resume = req.file.path;
+  }
 
   try {
     const profile = await Profile.findOneAndUpdate({ user: id }, updatedData, { new: true });
@@ -107,7 +121,7 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json(profile);
   } catch (error) {
-    console.error('Error updating profile:', error.message);
+    console.error('Error updating profile:', error);
     res.status(500).json({ message: 'Error updating profile. Please try again later.' });
   }
 };
