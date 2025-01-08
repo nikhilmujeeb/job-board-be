@@ -19,12 +19,9 @@ connectDB();
 
 const app = express();
 
-// Remove the following line
-// const cors = require('cors'); 
-
 const allowedOrigins = [
   'http://localhost:3000', // Development
-  'https://your-production-domain.com', // Production
+  'https://job-board-fe-pwmj.onrender.com', // Production
 ];
 
 const corsOptions = {
@@ -39,7 +36,7 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 };
 
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); // Use the CORS configuration
 
 app.use(express.json());
 
