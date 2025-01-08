@@ -46,8 +46,13 @@ export const createOrUpdateProfile = async (req, res) => {
 
 export const getProfileById = async (req, res) => {
   const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: 'User ID is required.' });
+  }
+
   try {
-    const profile = await Profile.findOne({ user: id }) 
+    const profile = await Profile.findOne({ user: id })
       .populate('user', 'firstName lastName email');
 
     if (!profile) {
