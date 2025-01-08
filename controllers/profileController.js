@@ -93,3 +93,21 @@ export const uploadResume = (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+
+  try {
+    const profile = await Profile.findOneAndUpdate({ user: id }, updatedData, { new: true });
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found for this user.' });
+    }
+
+    res.status(200).json(profile);
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ message: 'Error updating profile. Please try again later.' });
+  }
+};
