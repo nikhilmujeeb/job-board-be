@@ -20,7 +20,7 @@ connectDB();
 const app = express();
 
 app.use(cors({
-  origin: '*',
+  origin: 'https://job-board-fe-pwmj.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
