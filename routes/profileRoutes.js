@@ -23,6 +23,7 @@ const router = express.Router();
 
 router.post('/profile', authMiddleware, createOrUpdateProfile);
 router.get('/profile/:id', authMiddleware, getProfileById);
+router.put('/profile/:id', authMiddleware, getProfileById);
 router.get('/profiles', getAllProfiles);
 
 router.post('/upload-resume', authMiddleware, upload.single('resume'), uploadResume);
