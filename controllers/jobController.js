@@ -239,7 +239,7 @@ export const getJobsByEmployer = async (req, res) => {
     console.log('Employer ID:', employerId); 
 
     const jobs = await Job.find({ postedBy: employerId })
-      .populate('applicants', 'firstName lastName email') 
+      .populate('applicants', 'name email') 
       .exec();
 
     if (!jobs.length) {
