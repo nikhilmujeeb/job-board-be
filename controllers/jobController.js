@@ -36,7 +36,7 @@ export const createJobRequest = async (req, res) => {
     company,
     contact,
     jobType,
-    postedBy: req.user.userId,
+    postedBy: req.user._id,
     isApproved: false,
   });
 
