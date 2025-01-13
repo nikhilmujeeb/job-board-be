@@ -13,7 +13,7 @@ export const createOrUpdateProfile = async (req, res) => {
     phone,
     bio,
     skills,
-    education,
+    education,  // Optional field
     experience,  // Optional field
     socialLinks,
     profileId,  // Profile ID for updating
@@ -26,9 +26,9 @@ export const createOrUpdateProfile = async (req, res) => {
     return res.status(401).json({ message: 'Unauthorized: User not authenticated.' });
   }
 
-  // Ensure required fields are provided, excluding 'experience'
-  if (!firstName || !lastName || !dateOfBirth || !address || !email || !phone || !bio || !skills || !education) {
-    console.log('Missing required fields:', { firstName, lastName, dateOfBirth, address, email, phone, bio, skills, education });
+  // Ensure required fields are provided, excluding 'experience' and 'education'
+  if (!firstName || !lastName || !dateOfBirth || !address || !email || !phone || !bio || !skills) {
+    console.log('Missing required fields:', { firstName, lastName, dateOfBirth, address, email, phone, bio, skills });
     return res.status(400).json({ message: 'All required fields are not provided.' });
   }
 
@@ -53,6 +53,16 @@ export const createOrUpdateProfile = async (req, res) => {
       }
     }
 
+    // Parse education if it's a string (to handle stringified JSON)
+    let parsedEducation = education;
+    if (typeof education === 'string') {
+      try {
+        parsedEducation = JSON.parse(education);
+      } catch (error) {
+        return res.status(400).json({ message: 'Invalid education format' });
+      }
+    }
+
     // Prepare profile data to be saved
     const profileData = {
       user: req.user._id,  // Link the profile to the user
@@ -65,7 +75,7 @@ export const createOrUpdateProfile = async (req, res) => {
       phone,
       bio,
       skills,
-      education,
+      education: parsedEducation,  // Use parsed education here
       experience: parsedExperience,  // Use parsed experience here
       socialLinks: parsedSocialLinks,  // Use parsed socialLinks here
     };
