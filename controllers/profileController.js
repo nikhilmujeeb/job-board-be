@@ -189,6 +189,15 @@ export const updateProfile = async (req, res) => {
     }
   }
 
+  // Ensure experience is an array of objects (if it exists)
+  if (updatedData.experience && !Array.isArray(updatedData.experience)) {
+    try {
+      updatedData.experience = JSON.parse(updatedData.experience);  // If it's a string, parse it into an array
+    } catch (error) {
+      return res.status(400).json({ message: 'Invalid experience data format.' });
+    }
+  }
+
   try {
     // Update the profile using the profile ID
     const profile = await Profile.findByIdAndUpdate(id, updatedData, { new: true });
