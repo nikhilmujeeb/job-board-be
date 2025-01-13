@@ -9,11 +9,11 @@ const educationSchema = new mongoose.Schema({
 });
 
 const experienceSchema = new mongoose.Schema({
-  company: { type: String, required: true },
-  jobTitle: { type: String, required: true },
-  startDate: { type: Date, required: true },
-  endDate: { type: Date, required: true },
-  description: { type: String, required: true },
+  company: { type: String, required: false },
+  jobTitle: { type: String, required: false },
+  startDate: { type: Date, required: false },
+  endDate: { type: Date, required: false },
+  description: { type: String, required: false },
 });
 
 const socialLinksSchema = new mongoose.Schema({

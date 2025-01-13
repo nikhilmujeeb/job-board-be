@@ -1,6 +1,5 @@
 import Profile from '../models/Profile.js';
 import fs from 'fs';
-import path from 'path';
 import uploadToGitHub from '../utils/githubUploader.js';
 
 export const createOrUpdateProfile = async (req, res) => {
