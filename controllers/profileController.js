@@ -13,27 +13,24 @@ export const createOrUpdateProfile = async (req, res) => {
     phone,
     bio,
     skills,
-    education,  // Optional field
-    experience,  // Optional field
+    education, 
+    experience, 
     socialLinks,
-    profileId,  // Profile ID for updating
+    profileId,  
   } = req.body;
 
-  // Log incoming request body
   console.log('Request body:', req.body);
 
   if (!req.user || !req.user._id) {
     return res.status(401).json({ message: 'Unauthorized: User not authenticated.' });
   }
 
-  // Ensure required fields are provided, excluding 'experience' and 'education'
   if (!firstName || !lastName || !dateOfBirth || !address || !email || !phone || !bio || !skills) {
     console.log('Missing required fields:', { firstName, lastName, dateOfBirth, address, email, phone, bio, skills });
     return res.status(400).json({ message: 'All required fields are not provided.' });
   }
 
   try {
-    // Parse socialLinks if it's a string (to handle stringified JSON)
     let parsedSocialLinks = socialLinks;
     if (typeof socialLinks === 'string') {
       try {
@@ -43,7 +40,6 @@ export const createOrUpdateProfile = async (req, res) => {
       }
     }
 
-    // Parse experience if it's a string (to handle stringified JSON)
     let parsedExperience = experience;
     if (typeof experience === 'string') {
       try {
@@ -53,7 +49,6 @@ export const createOrUpdateProfile = async (req, res) => {
       }
     }
 
-    // Parse education if it's a string (to handle stringified JSON)
     let parsedEducation = education;
     if (typeof education === 'string') {
       try {
@@ -63,9 +58,8 @@ export const createOrUpdateProfile = async (req, res) => {
       }
     }
 
-    // Prepare profile data to be saved
     const profileData = {
-      user: req.user._id,  // Link the profile to the user
+      user: req.user._id,
       firstName,
       middleName,
       lastName,
@@ -75,22 +69,19 @@ export const createOrUpdateProfile = async (req, res) => {
       phone,
       bio,
       skills,
-      education: parsedEducation,  // Use parsed education here
-      experience: parsedExperience,  // Use parsed experience here
-      socialLinks: parsedSocialLinks,  // Use parsed socialLinks here
+      education: parsedEducation, 
+      experience: parsedExperience, 
+      socialLinks: parsedSocialLinks, 
     };
 
-    // Log the profile data before updating or creating
     console.log('Profile data to be saved:', profileData);
 
-    // If profileId is provided, update the existing profile; otherwise, create a new one
     const profile = await Profile.findOneAndUpdate(
-      { _id: profileId || req.body.profileId },  // Use the provided profileId or create a new one
+      { _id: profileId || req.body.profileId }, 
       { $set: profileData },
       { new: true, upsert: true }
     );
 
-    // Log the profile after saving
     console.log('Profile saved:', profile);
 
     res.status(200).json({ message: 'Profile saved successfully.', profile });
