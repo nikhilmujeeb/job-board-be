@@ -2,6 +2,8 @@ import Profile from '../models/Profile.js';
 import fs from 'fs';
 import uploadToGitHub from '../utils/githubUploader.js';
 
+const Profile = require('../models/Profile');  // Adjust the import as needed
+
 export const createOrUpdateProfile = async (req, res) => {
   const {
     firstName,
@@ -14,9 +16,9 @@ export const createOrUpdateProfile = async (req, res) => {
     bio,
     skills,
     education,
-    experience,  // No longer required
+    experience,  // Optional field
     socialLinks,
-    profileId,  // Add profileId here
+    profileId,  // Profile ID for updating
   } = req.body;
 
   // Log incoming request body
@@ -33,6 +35,17 @@ export const createOrUpdateProfile = async (req, res) => {
   }
 
   try {
+    // Parse socialLinks if it's a string (to handle stringified JSON)
+    let parsedSocialLinks = socialLinks;
+    if (typeof socialLinks === 'string') {
+      try {
+        parsedSocialLinks = JSON.parse(socialLinks);
+      } catch (error) {
+        return res.status(400).json({ message: 'Invalid socialLinks format' });
+      }
+    }
+
+    // Prepare profile data to be saved
     const profileData = {
       user: req.user._id,  // Link the profile to the user
       firstName,
@@ -45,8 +58,8 @@ export const createOrUpdateProfile = async (req, res) => {
       bio,
       skills,
       education,
-      experience,  // Experience is optional
-      socialLinks,
+      experience,  // Optional field
+      socialLinks: parsedSocialLinks,  // Use parsed socialLinks here
     };
 
     // Log the profile data before updating or creating
