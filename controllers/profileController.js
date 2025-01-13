@@ -16,7 +16,7 @@ export const createOrUpdateProfile = async (req, res) => {
     education, 
     experience, 
     socialLinks,
-    profileId,  
+    profileId,  // Ensure this is sent in the request body
   } = req.body;
 
   console.log('Request body:', req.body);
@@ -59,7 +59,7 @@ export const createOrUpdateProfile = async (req, res) => {
     }
 
     const profileData = {
-      user: req._id,
+      user: req.user._id,  // Use the authenticated user's ID
       firstName,
       middleName,
       lastName,
@@ -77,7 +77,7 @@ export const createOrUpdateProfile = async (req, res) => {
     console.log('Profile data to be saved:', profileData);
 
     const profile = await Profile.findOneAndUpdate(
-      { _id: profileId || req.body.profileId }, 
+      { _id: profileId },  // Use profileId from request body
       { $set: profileData },
       { new: true, upsert: true }
     );
