@@ -99,19 +99,19 @@ export const createOrUpdateProfile = async (req, res) => {
   }
 };
 
-export const getProfileById = async (req, res) => {
-  const { id } = req.params;  // Profile ID
+export const getProfileByUserId = async (req, res) => {
+  const { userId } = req.params;  // Use userId to fetch profile
 
-  if (!id) {
-    return res.status(400).json({ message: 'Profile ID is required.' });
+  if (!userId) {
+    return res.status(400).json({ message: 'User ID is required.' });
   }
 
   try {
-    // Fetch the profile using the profile ID
-    const profile = await Profile.findById(id).populate('user', 'firstName lastName email');
+    // Fetch the profile by userId (user field in Profile model)
+    const profile = await Profile.findOne({ user: userId }).populate('user', 'firstName lastName email');
 
     if (!profile) {
-      console.warn(`Profile not found for profile ID: ${id}`);
+      console.warn(`Profile not found for user ID: ${userId}`);
       return res.status(404).json({ message: 'Profile not found.' });
     }
 
