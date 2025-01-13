@@ -13,10 +13,10 @@ export const createOrUpdateProfile = async (req, res) => {
     phone,
     bio,
     skills,
-    education, 
-    experience, 
+    education,
+    experience,
     socialLinks,
-    profileId,  // Ensure this is sent in the request body
+    profileId,  // Profile ID to update the existing profile
   } = req.body;
 
   console.log('Request body:', req.body);
@@ -59,7 +59,7 @@ export const createOrUpdateProfile = async (req, res) => {
     }
 
     const profileData = {
-      user: req.user._id,  // Use the authenticated user's ID
+      user: req.user._id,  // Store the authenticated user's ID in the profile
       firstName,
       middleName,
       lastName,
@@ -76,11 +76,19 @@ export const createOrUpdateProfile = async (req, res) => {
 
     console.log('Profile data to be saved:', profileData);
 
-    const profile = await Profile.findOneAndUpdate(
-      { _id: profileId },  // Use profileId from request body
-      { $set: profileData },
-      { new: true, upsert: true }
-    );
+    let profile;
+    if (profileId) {
+      // If profileId is provided, update the existing profile
+      profile = await Profile.findOneAndUpdate(
+        { _id: profileId },  // Search by profile _id
+        { $set: profileData },  // Update profile data
+        { new: true }  // Return the updated profile
+      );
+    } else {
+      // If no profileId is provided, create a new profile
+      profile = new Profile(profileData);
+      await profile.save();  // Save the new profile
+    }
 
     console.log('Profile saved:', profile);
 
