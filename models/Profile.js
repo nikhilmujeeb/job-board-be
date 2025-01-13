@@ -35,7 +35,7 @@ const profileSchema = new mongoose.Schema({
     unique: true, 
     match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 
   },
-  countryCode: { type: String, required: true },
+  countryCode: { type: String, required: false, default: 'India' },
   phone: { 
     type: String, 
     required: true, 
