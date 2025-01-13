@@ -59,7 +59,7 @@ export const createOrUpdateProfile = async (req, res) => {
     }
 
     const profileData = {
-      user: req.user._id,
+      user: req._id,
       firstName,
       middleName,
       lastName,
