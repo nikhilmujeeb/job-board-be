@@ -33,7 +33,7 @@ const upload = multer({
 const router = express.Router();
 
 router.post('/profile', authMiddleware, createOrUpdateProfile);
-router.get('/profile/:id', authMiddleware, getProfileByUserId);
+router.get('/profile/:userId', authMiddleware, getProfileByUserId);
 router.put('/profile/:id', authMiddleware, updateProfile);
 router.get('/profiles', authMiddleware, getAllProfiles);
 router.post('/upload-resume', authMiddleware, upload.single('resume'), uploadResume);
