@@ -43,6 +43,16 @@ export const createOrUpdateProfile = async (req, res) => {
       }
     }
 
+    // Parse experience if it's a string (to handle stringified JSON)
+    let parsedExperience = experience;
+    if (typeof experience === 'string') {
+      try {
+        parsedExperience = JSON.parse(experience);
+      } catch (error) {
+        return res.status(400).json({ message: 'Invalid experience format' });
+      }
+    }
+
     // Prepare profile data to be saved
     const profileData = {
       user: req.user._id,  // Link the profile to the user
@@ -56,7 +66,7 @@ export const createOrUpdateProfile = async (req, res) => {
       bio,
       skills,
       education,
-      experience,  // Optional field
+      experience: parsedExperience,  // Use parsed experience here
       socialLinks: parsedSocialLinks,  // Use parsed socialLinks here
     };
 
