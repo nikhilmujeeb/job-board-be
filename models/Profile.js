@@ -46,7 +46,7 @@ const profileSchema = new mongoose.Schema({
   education: { type: [educationSchema] },
   experience: { type: [experienceSchema] },
   socialLinks: { type: socialLinksSchema },
-  resume: { type: String }, 
+  resume: { type: String, required: false }, 
 }, { timestamps: true });
 
 profileSchema.index({ user: 1 });
