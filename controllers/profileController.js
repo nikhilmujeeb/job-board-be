@@ -166,7 +166,7 @@ export const uploadResume = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   const { id } = req.params;  // Profile ID
-  const updatedData = req.body;
+  let updatedData = req.body;
 
   if (!id) {
     return res.status(400).json({ message: 'Profile ID is required.' });
@@ -178,6 +178,15 @@ export const updateProfile = async (req, res) => {
 
   if (req.file) {
     updatedData.resume = req.file.path; 
+  }
+
+  // Ensure education is an array of objects (if it exists)
+  if (updatedData.education && !Array.isArray(updatedData.education)) {
+    try {
+      updatedData.education = JSON.parse(updatedData.education);  // If it's a string, parse it into an array
+    } catch (error) {
+      return res.status(400).json({ message: 'Invalid education data format.' });
+    }
   }
 
   try {
