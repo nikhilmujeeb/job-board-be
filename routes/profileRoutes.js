@@ -5,7 +5,7 @@ import {
   getProfileById,
   getAllProfiles,
   uploadResume,
-  updateProfile
+  updateProfile,
 } from '../controllers/profileController.js';
 import multer from 'multer';
 import path from 'path';
@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}_${file.originalname}`); 
-  }
+  },
 });
 
 const upload = multer({
@@ -27,19 +27,15 @@ const upload = multer({
       return cb(new Error('Only PDF, DOC, and DOCX files are allowed.'));
     }
     cb(null, true);
-  }
+  },
 });
 
 const router = express.Router();
 
 router.post('/profile', authMiddleware, createOrUpdateProfile);
-
 router.get('/profile/:id', authMiddleware, getProfileById);
-
-router.put('/profile/:id', updateProfile);
-
-router.get('/profiles', getAllProfiles);
-
+router.put('/profile/:id', authMiddleware, updateProfile);
+router.get('/profiles', authMiddleware, getAllProfiles);
 router.post('/upload-resume', authMiddleware, upload.single('resume'), uploadResume);
 
 export default router;
