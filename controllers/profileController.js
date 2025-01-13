@@ -3,7 +3,38 @@ import fs from 'fs';
 import uploadToGitHub from '../utils/githubUploader.js';
 
 export const createOrUpdateProfile = async (req, res) => {
-    const {
+  const {
+    firstName,
+    middleName,
+    lastName,
+    dateOfBirth,
+    address,
+    email,
+    phone,
+    bio,
+    skills,
+    education,
+    experience,  // No longer required
+    socialLinks,
+    profileId,  // Add profileId here
+  } = req.body;
+
+  // Log incoming request body
+  console.log('Request body:', req.body);
+
+  if (!req.user || !req.user._id) {
+    return res.status(401).json({ message: 'Unauthorized: User not authenticated.' });
+  }
+
+  // Ensure required fields are provided, excluding 'experience'
+  if (!firstName || !lastName || !dateOfBirth || !address || !email || !phone || !bio || !skills || !education) {
+    console.log('Missing required fields:', { firstName, lastName, dateOfBirth, address, email, phone, bio, skills, education });
+    return res.status(400).json({ message: 'All required fields are not provided.' });
+  }
+
+  try {
+    const profileData = {
+      user: req.user._id,  // Link the profile to the user
       firstName,
       middleName,
       lastName,
@@ -14,49 +45,28 @@ export const createOrUpdateProfile = async (req, res) => {
       bio,
       skills,
       education,
-      experience,  // No longer required
+      experience,  // Experience is optional
       socialLinks,
-      profileId,  // Add profileId here
-    } = req.body;
-  
-    if (!req.user || !req.user._id) {
-      return res.status(401).json({ message: 'Unauthorized: User not authenticated.' });
-    }
-  
-    // Ensure required fields are provided, excluding 'experience'
-    if (!firstName || !lastName || !dateOfBirth || !address || !email || !phone || !bio || !skills || !education) {
-      return res.status(400).json({ message: 'All required fields are not provided.' });
-    }
-  
-    try {
-      const profileData = {
-        user: req.user._id,  // Link the profile to the user
-        firstName,
-        middleName,
-        lastName,
-        dateOfBirth,
-        address,
-        email,
-        phone,
-        bio,
-        skills,
-        education,
-        experience,  // Experience is optional
-        socialLinks,
-      };
-  
-      // If profileId is provided, update the existing profile; otherwise, create a new one
-      const profile = await Profile.findOneAndUpdate(
-        { _id: profileId || req.body.profileId },  // Use the provided profileId or create a new one
-        { $set: profileData },
-        { new: true, upsert: true }
-      );
-  
-      res.status(200).json({ message: 'Profile saved successfully.', profile });
-    } catch (error) {
-      console.error('Error saving profile:', error.message);
-      res.status(500).json({ message: 'Internal server error. Please try again later.' });
-    }  
+    };
+
+    // Log the profile data before updating or creating
+    console.log('Profile data to be saved:', profileData);
+
+    // If profileId is provided, update the existing profile; otherwise, create a new one
+    const profile = await Profile.findOneAndUpdate(
+      { _id: profileId || req.body.profileId },  // Use the provided profileId or create a new one
+      { $set: profileData },
+      { new: true, upsert: true }
+    );
+
+    // Log the profile after saving
+    console.log('Profile saved:', profile);
+
+    res.status(200).json({ message: 'Profile saved successfully.', profile });
+  } catch (error) {
+    console.error('Error saving profile:', error.message);
+    res.status(500).json({ message: 'Internal server error. Please try again later.' });
+  }
 };
 
 export const getProfileById = async (req, res) => {
