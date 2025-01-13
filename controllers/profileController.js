@@ -16,6 +16,7 @@ export const createOrUpdateProfile = async (req, res) => {
     education,
     experience,
     socialLinks,
+    profileId,  // Add profileId here
   } = req.body;
 
   if (!req.user || !req.user._id) {
@@ -32,7 +33,7 @@ export const createOrUpdateProfile = async (req, res) => {
 
   try {
     const profileData = {
-      user: req.user._id,
+      user: req.user._id,  // Link the profile to the user
       firstName,
       middleName,
       lastName,
@@ -47,8 +48,9 @@ export const createOrUpdateProfile = async (req, res) => {
       socialLinks,
     };
 
+    // If profileId is provided, update the existing profile; otherwise, create a new one
     const profile = await Profile.findOneAndUpdate(
-      { user: req.user._id },
+      { _id: profileId || req.body.profileId },  // Use the provided profileId or create a new one
       { $set: profileData },
       { new: true, upsert: true }
     );
@@ -61,18 +63,19 @@ export const createOrUpdateProfile = async (req, res) => {
 };
 
 export const getProfileById = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params;  // Profile ID
 
   if (!id) {
-    return res.status(400).json({ message: 'User ID is required.' });
+    return res.status(400).json({ message: 'Profile ID is required.' });
   }
 
   try {
-    const profile = await Profile.findOne({ user: id }).populate('user', 'firstName lastName email');
+    // Fetch the profile using the profile ID
+    const profile = await Profile.findById(id).populate('user', 'firstName lastName email');
 
     if (!profile) {
-      console.warn(`Profile not found for user ID: ${id}`);
-      return res.status(404).json({ message: 'Profile not found for this user.' });
+      console.warn(`Profile not found for profile ID: ${id}`);
+      return res.status(404).json({ message: 'Profile not found.' });
     }
 
     res.status(200).json(profile);
@@ -125,8 +128,12 @@ export const uploadResume = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params;  // Profile ID
   const updatedData = req.body;
+
+  if (!id) {
+    return res.status(400).json({ message: 'Profile ID is required.' });
+  }
 
   if (!req.user || !req.user._id) {
     return res.status(401).json({ message: 'Unauthorized: User not authenticated.' });
@@ -137,14 +144,11 @@ export const updateProfile = async (req, res) => {
   }
 
   try {
-    const profile = await Profile.findOneAndUpdate(
-      { user: id },
-      updatedData,
-      { new: true }
-    );
+    // Update the profile using the profile ID
+    const profile = await Profile.findByIdAndUpdate(id, updatedData, { new: true });
 
     if (!profile) {
-      return res.status(404).json({ message: 'Profile not found for this user.' });
+      return res.status(404).json({ message: 'Profile not found.' });
     }
 
     res.status(200).json({ success: true, profile });
