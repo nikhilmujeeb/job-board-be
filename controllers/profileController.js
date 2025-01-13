@@ -198,6 +198,15 @@ export const updateProfile = async (req, res) => {
     }
   }
 
+  // Ensure socialLinks is an object (if it exists)
+  if (updatedData.socialLinks && typeof updatedData.socialLinks === 'string') {
+    try {
+      updatedData.socialLinks = JSON.parse(updatedData.socialLinks);  // If it's a string, parse it into an object
+    } catch (error) {
+      return res.status(400).json({ message: 'Invalid socialLinks data format.' });
+    }
+  }
+
   try {
     // Update the profile using the profile ID
     const profile = await Profile.findByIdAndUpdate(id, updatedData, { new: true });
