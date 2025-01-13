@@ -32,7 +32,7 @@ const upload = multer({
 
 const router = express.Router();
 
-router.post('/profile/:Id', authMiddleware, createOrUpdateProfile);
+router.post('/profile', authMiddleware, createOrUpdateProfile);
 router.get('/profile/:id', authMiddleware, getProfileById);
 router.put('/profile/:id', authMiddleware, updateProfile);
 router.get('/profiles', authMiddleware, getAllProfiles);
