@@ -3,37 +3,24 @@ import fs from 'fs';
 import uploadToGitHub from '../utils/githubUploader.js';
 
 export const createOrUpdateProfile = async (req, res) => {
-  const {
-    firstName,
-    middleName,
-    lastName,
-    dateOfBirth,
-    address,
-    email,
-    phone,
-    bio,
-    skills,
-    education,
-    experience,
-    socialLinks,
-    profileId,  // Add profileId here
-  } = req.body;
-
+  const { firstName, middleName, lastName, dateOfBirth, address, email, phone, bio, skills, education, experience, socialLinks } = req.body;
+  const { profileId } = req.params; 
+  
   if (!req.user || !req.user._id) {
     return res.status(401).json({ message: 'Unauthorized: User not authenticated.' });
   }
-
+  
   if (!firstName || !lastName || !dateOfBirth || !address || !email || !phone || !bio || !skills) {
     return res.status(400).json({ message: 'All required fields are not provided.' });
   }
-
+  
   if (!education || !experience) {
     return res.status(400).json({ message: 'Education and Experience are required fields.' });
   }
-
+  
   try {
     const profileData = {
-      user: req.user._id,  // Link the profile to the user
+      user: req.user._id,
       firstName,
       middleName,
       lastName,
@@ -47,19 +34,18 @@ export const createOrUpdateProfile = async (req, res) => {
       experience,
       socialLinks,
     };
-
-    // If profileId is provided, update the existing profile; otherwise, create a new one
+  
     const profile = await Profile.findOneAndUpdate(
-      { _id: profileId || req.body.profileId },  // Use the provided profileId or create a new one
+      { _id: profileId },  // Use the profileId from the URL
       { $set: profileData },
       { new: true, upsert: true }
     );
-
+  
     res.status(200).json({ message: 'Profile saved successfully.', profile });
   } catch (error) {
     console.error('Error saving profile:', error.message);
     res.status(500).json({ message: 'Internal server error. Please try again later.' });
-  }
+  }  
 };
 
 export const getProfileById = async (req, res) => {
