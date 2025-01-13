@@ -2,8 +2,6 @@ import Profile from '../models/Profile.js';
 import fs from 'fs';
 import uploadToGitHub from '../utils/githubUploader.js';
 
-const Profile = require('../models/Profile');  // Adjust the import as needed
-
 export const createOrUpdateProfile = async (req, res) => {
   const {
     firstName,
