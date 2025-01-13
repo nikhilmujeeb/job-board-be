@@ -22,21 +22,12 @@ export const createOrUpdateProfile = async (req, res) => {
     return res.status(401).json({ message: 'Unauthorized: User not authenticated.' });
   }
 
-  const requiredFields = [
-    firstName,
-    lastName,
-    dateOfBirth,
-    address,
-    email,
-    phone,
-    bio,
-    skills,
-    education,
-    experience,
-  ];
+  if (!firstName || !lastName || !dateOfBirth || !address || !email || !phone || !bio || !skills) {
+    return res.status(400).json({ message: 'All required fields are not provided.' });
+  }
 
-  if (requiredFields.some((field) => !field) || (Array.isArray(socialLinks) && socialLinks.length === 0)) {
-    return res.status(400).json({ message: 'All fields are required to create or update a profile.' });
+  if (!education || !experience) {
+    return res.status(400).json({ message: 'Education and Experience are required fields.' });
   }
 
   try {
