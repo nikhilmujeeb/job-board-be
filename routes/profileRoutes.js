@@ -2,7 +2,7 @@ import express from 'express';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import {
   createOrUpdateProfile,
-  getProfileById,
+  getProfileByUserId,
   getAllProfiles,
   uploadResume,
   updateProfile,
@@ -33,7 +33,7 @@ const upload = multer({
 const router = express.Router();
 
 router.post('/profile', authMiddleware, createOrUpdateProfile);
-router.get('/profile/:id', authMiddleware, getProfileById);
+router.get('/profile/:id', authMiddleware, getProfileByUserId);
 router.put('/profile/:id', authMiddleware, updateProfile);
 router.get('/profiles', authMiddleware, getAllProfiles);
 router.post('/upload-resume', authMiddleware, upload.single('resume'), uploadResume);
